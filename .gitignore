@@ -1,0 +1,18 @@
+# Secrets
+**/.env
+**/application-local.properties
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+
+# Claude Code internal
+.claude/
+
+# Other projects in same folder
+to_do_list/
+todolist/

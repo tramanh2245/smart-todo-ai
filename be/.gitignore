@@ -1,0 +1,22 @@
+target/
+*.class
+*.jar
+*.war
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# Secrets - KHÔNG commit file này nếu có API key thật
+# application-local.properties
+
+# Maven
+.mvn/wrapper/maven-wrapper.jar
+!.mvn/wrapper/maven-wrapper.properties
+
+# OS
+.DS_Store
+Thumbs.db
