@@ -72,7 +72,13 @@ export default function App() {
             <span className="spinner" />
             <span>Đang tải...</span>
           </div>
-        ) : (
+        ) : tasks.length === 0 && (
+          <div className="empty">
+            <div className="empty-icon">🌸</div>
+            <p>Ngày mới bắt đầu</p>
+            <p className="empty-sub">Thêm việc đầu tiên hoặc nhấn ✨ để AI gợi ý</p>
+          </div>
+        ) || (
           sortedDates.map(date => (
             <DaySection
               key={date}

@@ -2,10 +2,10 @@ import { useState } from 'react'
 import type { Category } from '../types/task'
 
 const CATEGORIES: { value: Category; label: string }[] = [
-  { value: 'work', label: 'Công việc' },
-  { value: 'health', label: 'Sức khoẻ' },
-  { value: 'learn', label: 'Học tập' },
-  { value: 'personal', label: 'Cá nhân' },
+  { value: 'work',     label: '💼 Việc' },
+  { value: 'health',   label: '🌿 Sức khoẻ' },
+  { value: 'learn',    label: '📖 Học' },
+  { value: 'personal', label: '🌸 Cá nhân' },
 ]
 
 function todayStr() {
@@ -54,16 +54,17 @@ export function AddTaskForm({ onAdd }: Props) {
         <input
           className="task-input"
           type="text"
-          placeholder="Thêm task mới..."
+          placeholder="Thêm việc cần làm..."
           value={title}
           onChange={e => setTitle(e.target.value)}
           disabled={adding}
         />
         <button className="btn-add" type="submit" disabled={adding || !title.trim()}>
-          {adding ? '...' : 'Thêm'}
+          {adding ? '...' : '+ Thêm'}
         </button>
       </div>
       <div className="add-form-meta">
+        <span className="meta-icon">📅</span>
         <input
           className="date-input"
           type="date"
@@ -71,7 +72,7 @@ export function AddTaskForm({ onAdd }: Props) {
           onChange={e => setTaskDate(e.target.value)}
           disabled={adding}
         />
-        <span className="time-label">Từ</span>
+        <span className="meta-icon">⏰</span>
         <input
           className="time-input"
           type="time"
@@ -79,7 +80,7 @@ export function AddTaskForm({ onAdd }: Props) {
           onChange={e => setStartTime(e.target.value)}
           disabled={adding}
         />
-        <span className="time-label">đến</span>
+        <span className="time-sep">→</span>
         <input
           className="time-input"
           type="time"

@@ -15,8 +15,11 @@ export function Header({ tasks, suggestLoading, onSuggest, onRefresh }: Props) {
     <header className="header">
       <div className="header-top">
         <div className="header-title">
-          <span className="header-icon">✓</span>
-          <h1>Smart To-Do AI</h1>
+          <span className="header-icon">🌸</span>
+          <div>
+            <h1>Smart To-Do AI</h1>
+            <p className="header-sub">Nhật ký & Công việc</p>
+          </div>
         </div>
         <div className="header-actions">
           <button
@@ -33,8 +36,8 @@ export function Header({ tasks, suggestLoading, onSuggest, onRefresh }: Props) {
         </div>
       </div>
       <div className="header-stats">
-        <span className="stat-chip stat-pending">{pending} đang làm</span>
-        <span className="stat-chip stat-done">{done} hoàn thành</span>
+        <span className="stat-chip stat-pending">🌸 {pending} đang làm</span>
+        <span className="stat-chip stat-done">✓ {done} hoàn thành</span>
       </div>
     </header>
   )
