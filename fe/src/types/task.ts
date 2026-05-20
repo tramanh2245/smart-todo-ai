@@ -7,6 +7,8 @@ export interface Task {
   completed: boolean
   createdAt: string | null
   completedAt: string | null
+  startTime: string | null
+  endTime: string | null
 }
 
 export interface AISuggestion {

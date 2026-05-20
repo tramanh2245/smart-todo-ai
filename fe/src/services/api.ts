@@ -13,11 +13,11 @@ async function json<T>(res: Response): Promise<T> {
 export const api = {
   getTasks: () => fetch(API).then(r => json<Task[]>(r)),
 
-  createTask: (title: string, category: string) =>
+  createTask: (title: string, category: string, startTime?: string | null, endTime?: string | null) =>
     fetch(API, {
       method: 'POST',
       headers,
-      body: JSON.stringify({ title, category }),
+      body: JSON.stringify({ title, category, startTime: startTime ?? null, endTime: endTime ?? null }),
     }).then(r => json<Task>(r)),
 
   updateTask: (id: number, data: Partial<Task>) =>

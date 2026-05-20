@@ -24,8 +24,8 @@ export function useTasks() {
 
   useEffect(() => { loadTasks() }, [loadTasks])
 
-  const addTask = async (title: string, category: Category) => {
-    const task = await api.createTask(title, category)
+  const addTask = async (title: string, category: Category, startTime?: string | null, endTime?: string | null) => {
+    const task = await api.createTask(title, category, startTime, endTime)
     setTasks(prev => [task, ...prev])
   }
 

@@ -9,12 +9,14 @@ const CATEGORIES: { value: Category; label: string }[] = [
 ]
 
 interface Props {
-  onAdd: (title: string, category: Category) => Promise<void>
+  onAdd: (title: string, category: Category, startTime?: string | null, endTime?: string | null) => Promise<void>
 }
 
 export function AddTaskForm({ onAdd }: Props) {
   const [title, setTitle] = useState('')
   const [category, setCategory] = useState<Category>('work')
+  const [startTime, setStartTime] = useState('')
+  const [endTime, setEndTime] = useState('')
   const [adding, setAdding] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -23,8 +25,10 @@ export function AddTaskForm({ onAdd }: Props) {
     if (!t) return
     setAdding(true)
     try {
-      await onAdd(t, category)
+      await onAdd(t, category, startTime || null, endTime || null)
       setTitle('')
+      setStartTime('')
+      setEndTime('')
     } finally {
       setAdding(false)
     }
@@ -32,26 +36,46 @@ export function AddTaskForm({ onAdd }: Props) {
 
   return (
     <form className="add-form" onSubmit={handleSubmit}>
-      <select
-        className="category-select"
-        value={category}
-        onChange={e => setCategory(e.target.value as Category)}
-      >
-        {CATEGORIES.map(c => (
-          <option key={c.value} value={c.value}>{c.label}</option>
-        ))}
-      </select>
-      <input
-        className="task-input"
-        type="text"
-        placeholder="Thêm task mới..."
-        value={title}
-        onChange={e => setTitle(e.target.value)}
-        disabled={adding}
-      />
-      <button className="btn-add" type="submit" disabled={adding || !title.trim()}>
-        {adding ? '...' : 'Thêm'}
-      </button>
+      <div className="add-form-row">
+        <select
+          className="category-select"
+          value={category}
+          onChange={e => setCategory(e.target.value as Category)}
+        >
+          {CATEGORIES.map(c => (
+            <option key={c.value} value={c.value}>{c.label}</option>
+          ))}
+        </select>
+        <input
+          className="task-input"
+          type="text"
+          placeholder="Thêm task mới..."
+          value={title}
+          onChange={e => setTitle(e.target.value)}
+          disabled={adding}
+        />
+        <button className="btn-add" type="submit" disabled={adding || !title.trim()}>
+          {adding ? '...' : 'Thêm'}
+        </button>
+      </div>
+      <div className="add-form-time">
+        <label className="time-label">Từ</label>
+        <input
+          className="time-input"
+          type="time"
+          value={startTime}
+          onChange={e => setStartTime(e.target.value)}
+          disabled={adding}
+        />
+        <label className="time-label">đến</label>
+        <input
+          className="time-input"
+          type="time"
+          value={endTime}
+          onChange={e => setEndTime(e.target.value)}
+          disabled={adding}
+        />
+      </div>
     </form>
   )
 }

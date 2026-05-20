@@ -30,9 +30,16 @@ export function TaskCard({ task, onComplete, onDelete }: Props) {
       </button>
       <div className="task-body">
         <span className="task-title">{task.title}</span>
-        <span className="task-category" style={{ color: meta.color }}>
-          {meta.icon} {meta.label}
-        </span>
+        <div className="task-meta">
+          <span className="task-category" style={{ color: meta.color }}>
+            {meta.icon} {meta.label}
+          </span>
+          {(task.startTime || task.endTime) && (
+            <span className="task-time">
+              ⏰ {task.startTime ?? ''}{task.startTime && task.endTime ? ' – ' : ''}{task.endTime ?? ''}
+            </span>
+          )}
+        </div>
       </div>
       <button className="task-delete" onClick={onDelete} aria-label="Xoá task">
         🗑

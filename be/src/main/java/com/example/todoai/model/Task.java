@@ -25,4 +25,10 @@ public class Task {
 
     @Column(name = "completed_at")
     private LocalDateTime completedAt;
+
+    @Column(name = "start_time")
+    private String startTime;
+
+    @Column(name = "end_time")
+    private String endTime;
 }
