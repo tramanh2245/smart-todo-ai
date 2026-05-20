@@ -60,30 +60,44 @@ public class GeminiService {
             .post(body)
             .build();
 
-        try (Response response = client.newCall(request).execute()) {
-            String resBody = response.body() != null ? response.body().string() : "";
-            if (!response.isSuccessful()) {
-                log.error("Gemini API error: {} - {}", response.code(), resBody);
-                throw new RuntimeException("Gemini API error: " + response.code());
-            }
-            log.info("Gemini response received, length={}", resBody.length());
-            JSONObject obj = new JSONObject(resBody);
-            String text = obj
-                .getJSONArray("candidates")
-                .getJSONObject(0)
-                .getJSONObject("content")
-                .getJSONArray("parts")
-                .getJSONObject(0)
-                .getString("text");
+        Exception lastError = null;
+        for (int attempt = 1; attempt <= 3; attempt++) {
+            try (Response response = client.newCall(request).execute()) {
+                String resBody = response.body() != null ? response.body().string() : "";
+                if (response.code() == 429) {
+                    log.warn("Gemini rate limit (429), retry {}/3 after {}s", attempt, attempt * 3);
+                    Thread.sleep(attempt * 3000L);
+                    continue;
+                }
+                if (!response.isSuccessful()) {
+                    log.error("Gemini API error: {} - {}", response.code(), resBody);
+                    throw new RuntimeException("Gemini API error: " + response.code());
+                }
+                log.info("Gemini OK on attempt {}, response length={}", attempt, resBody.length());
+                JSONObject obj = new JSONObject(resBody);
+                String text = obj
+                    .getJSONArray("candidates")
+                    .getJSONObject(0)
+                    .getJSONObject("content")
+                    .getJSONArray("parts")
+                    .getJSONObject(0)
+                    .getString("text");
 
-            text = text.replaceAll("```json|```", "").trim();
-            JSONArray suggestions = new JSONArray(text);
-            List<String> result = new ArrayList<>();
-            for (int i = 0; i < suggestions.length(); i++) {
-                JSONObject s = suggestions.getJSONObject(i);
-                result.add(s.getString("title") + "|" + s.optString("category", "general"));
+                text = text.replaceAll("```json|```", "").trim();
+                JSONArray suggestions = new JSONArray(text);
+                List<String> result = new ArrayList<>();
+                for (int i = 0; i < suggestions.length(); i++) {
+                    JSONObject s = suggestions.getJSONObject(i);
+                    result.add(s.getString("title") + "|" + s.optString("category", "general"));
+                }
+                return result;
+            } catch (RuntimeException e) {
+                throw e;
+            } catch (Exception e) {
+                lastError = e;
+                log.error("Attempt {} failed: {}", attempt, e.getMessage());
             }
-            return result;
         }
+        throw new RuntimeException("Gemini failed after 3 attempts", lastError);
     }
 }
