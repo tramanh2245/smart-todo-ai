@@ -4,13 +4,18 @@ import com.example.todoai.model.Task;
 import okhttp3.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class GeminiService {
+
+    private static final Logger log = LoggerFactory.getLogger(GeminiService.class);
 
     @Value("${gemini.api.key}")
     private String apiKey;
@@ -18,7 +23,11 @@ public class GeminiService {
     @Value("${gemini.api.url}")
     private String apiUrl;
 
-    private final OkHttpClient client = new OkHttpClient();
+    private final OkHttpClient client = new OkHttpClient.Builder()
+        .connectTimeout(30, TimeUnit.SECONDS)
+        .readTimeout(60, TimeUnit.SECONDS)
+        .writeTimeout(30, TimeUnit.SECONDS)
+        .build();
 
     public List<String> suggestTasks(List<Task> recentTasks) throws Exception {
         StringBuilder taskList = new StringBuilder();
@@ -52,10 +61,12 @@ public class GeminiService {
             .build();
 
         try (Response response = client.newCall(request).execute()) {
+            String resBody = response.body() != null ? response.body().string() : "";
             if (!response.isSuccessful()) {
+                log.error("Gemini API error: {} - {}", response.code(), resBody);
                 throw new RuntimeException("Gemini API error: " + response.code());
             }
-            String resBody = response.body().string();
+            log.info("Gemini response received, length={}", resBody.length());
             JSONObject obj = new JSONObject(resBody);
             String text = obj
                 .getJSONArray("candidates")

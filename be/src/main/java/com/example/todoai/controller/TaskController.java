@@ -3,6 +3,8 @@ package com.example.todoai.controller;
 import com.example.todoai.model.Task;
 import com.example.todoai.service.GeminiService;
 import com.example.todoai.service.TaskService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +14,8 @@ import java.util.List;
 @RequestMapping("/api/tasks")
 @CrossOrigin(origins = "*")
 public class TaskController {
+
+    private static final Logger log = LoggerFactory.getLogger(TaskController.class);
 
     @Autowired
     private TaskService taskService;
@@ -47,6 +51,7 @@ public class TaskController {
             List<String> suggestions = geminiService.suggestTasks(recentTasks);
             return ResponseEntity.ok(suggestions);
         } catch (Exception e) {
+            log.error("AI suggest failed: {}", e.getMessage(), e);
             return ResponseEntity.internalServerError().build();
         }
     }
