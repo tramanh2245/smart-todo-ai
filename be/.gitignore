@@ -11,7 +11,7 @@ target/
 *.iws
 
 # Secrets - KHÔNG commit file này nếu có API key thật
-# application-local.properties
+application-local.properties
 
 # Maven
 .mvn/wrapper/maven-wrapper.jar
