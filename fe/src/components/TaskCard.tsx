@@ -36,7 +36,7 @@ export function TaskCard({ task, onComplete, onDelete }: Props) {
           </span>
           {(task.startTime || task.endTime) && (
             <span className="task-time">
-              ⏰ {task.startTime ?? ''}{task.startTime && task.endTime ? ' – ' : ''}{task.endTime ?? ''}
+              {task.startTime ?? '?'}{task.endTime ? ` – ${task.endTime}` : ''}
             </span>
           )}
         </div>

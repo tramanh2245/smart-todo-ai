@@ -200,49 +200,61 @@ body {
 .btn-add:disabled { opacity: 0.45; cursor: default; transform: none; }
 
 /* ── Form Date/Time Row ── */
-.add-form-meta {
+.form-meta-row {
   display: flex;
-  align-items: center;
   gap: 8px;
   flex-wrap: wrap;
 }
 
-.meta-icon {
+.form-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--sakura-pale);
+  border: 1.5px solid var(--sakura-border);
+  border-radius: 20px;
+  padding: 6px 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  flex: 1;
+  min-width: 0;
+}
+
+.form-pill:focus-within {
+  border-color: var(--sakura);
+  box-shadow: 0 0 0 3px rgba(232,115,154,0.10);
+}
+
+.form-pill-time {
+  flex: 1.2;
+}
+
+.form-pill-icon {
   font-size: 13px;
   flex-shrink: 0;
+  line-height: 1;
 }
 
-.date-input,
-.time-input {
-  border: 1.5px solid var(--sakura-border);
-  border-radius: var(--radius-sm);
-  padding: 6px 10px;
-  font-size: 13px;
+.pill-input {
+  border: none;
   outline: none;
+  background: transparent;
+  font-size: 13px;
   color: var(--bark);
-  background: var(--sakura-pale);
-  transition: border-color 0.2s;
   font-family: inherit;
-}
-
-.date-input {
   min-width: 0;
   flex: 1;
-  max-width: 145px;
 }
 
-.time-input {
-  width: 88px;
-  flex-shrink: 0;
+.pill-time {
+  width: 72px;
+  flex: none;
 }
 
-.date-input:focus,
-.time-input:focus { border-color: var(--sakura); }
-
-.time-sep {
-  color: var(--bark-soft);
-  font-size: 12px;
+.pill-sep {
+  color: var(--bark-faint);
+  font-size: 11px;
   flex-shrink: 0;
+  user-select: none;
 }
 
 /* ── AI Suggestions ── */
@@ -490,12 +502,16 @@ body {
 
 .task-time {
   font-size: 11px;
-  color: var(--white);
-  background: var(--sakura);
-  padding: 1px 8px;
-  border-radius: 10px;
+  color: var(--bark-soft);
   font-weight: 500;
-  opacity: 0.85;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.task-time::before {
+  content: '⏰';
+  font-size: 10px;
 }
 
 .task-delete {

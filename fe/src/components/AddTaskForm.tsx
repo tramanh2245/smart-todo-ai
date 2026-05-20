@@ -17,12 +17,12 @@ interface Props {
 }
 
 export function AddTaskForm({ onAdd }: Props) {
-  const [title, setTitle] = useState('')
+  const [title, setTitle]       = useState('')
   const [category, setCategory] = useState<Category>('work')
   const [startTime, setStartTime] = useState('')
-  const [endTime, setEndTime] = useState('')
+  const [endTime, setEndTime]   = useState('')
   const [taskDate, setTaskDate] = useState(todayStr())
-  const [adding, setAdding] = useState(false)
+  const [adding, setAdding]     = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -41,6 +41,7 @@ export function AddTaskForm({ onAdd }: Props) {
 
   return (
     <form className="add-form" onSubmit={handleSubmit}>
+      {/* Row 1: category + title + button */}
       <div className="add-form-row">
         <select
           className="category-select"
@@ -60,34 +61,41 @@ export function AddTaskForm({ onAdd }: Props) {
           disabled={adding}
         />
         <button className="btn-add" type="submit" disabled={adding || !title.trim()}>
-          {adding ? '...' : '+ Thêm'}
+          {adding ? '…' : '+ Thêm'}
         </button>
       </div>
-      <div className="add-form-meta">
-        <span className="meta-icon">📅</span>
-        <input
-          className="date-input"
-          type="date"
-          value={taskDate}
-          onChange={e => setTaskDate(e.target.value)}
-          disabled={adding}
-        />
-        <span className="meta-icon">⏰</span>
-        <input
-          className="time-input"
-          type="time"
-          value={startTime}
-          onChange={e => setStartTime(e.target.value)}
-          disabled={adding}
-        />
-        <span className="time-sep">→</span>
-        <input
-          className="time-input"
-          type="time"
-          value={endTime}
-          onChange={e => setEndTime(e.target.value)}
-          disabled={adding}
-        />
+
+      {/* Row 2: date pill + time-range pill */}
+      <div className="form-meta-row">
+        <div className="form-pill">
+          <span className="form-pill-icon">📅</span>
+          <input
+            className="pill-input"
+            type="date"
+            value={taskDate}
+            onChange={e => setTaskDate(e.target.value)}
+            disabled={adding}
+          />
+        </div>
+
+        <div className="form-pill form-pill-time">
+          <span className="form-pill-icon">⏰</span>
+          <input
+            className="pill-input pill-time"
+            type="time"
+            value={startTime}
+            onChange={e => setStartTime(e.target.value)}
+            disabled={adding}
+          />
+          <span className="pill-sep">―</span>
+          <input
+            className="pill-input pill-time"
+            type="time"
+            value={endTime}
+            onChange={e => setEndTime(e.target.value)}
+            disabled={adding}
+          />
+        </div>
       </div>
     </form>
   )
