@@ -31,4 +31,7 @@ public class Task {
 
     @Column(name = "end_time")
     private String endTime;
+
+    @Column(name = "task_date")
+    private String taskDate;
 }

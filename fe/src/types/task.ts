@@ -9,6 +9,13 @@ export interface Task {
   completedAt: string | null
   startTime: string | null
   endTime: string | null
+  taskDate: string | null
+}
+
+export interface DayNote {
+  id?: number
+  noteDate: string
+  content: string
 }
 
 export interface AISuggestion {

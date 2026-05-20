@@ -28,6 +28,9 @@ public class TaskService {
         task.setTitle(updatedTask.getTitle());
         task.setCategory(updatedTask.getCategory());
         task.setCompleted(updatedTask.isCompleted());
+        task.setStartTime(updatedTask.getStartTime());
+        task.setEndTime(updatedTask.getEndTime());
+        task.setTaskDate(updatedTask.getTaskDate());
         if (updatedTask.isCompleted() && task.getCompletedAt() == null) {
             task.setCompletedAt(LocalDateTime.now());
         }

@@ -1,8 +1,15 @@
+import { useState, useEffect } from 'react'
 import { useTasks } from './hooks/useTasks'
 import { Header } from './components/Header'
 import { AddTaskForm } from './components/AddTaskForm'
 import { SuggestionChips } from './components/SuggestionChips'
-import { TaskCard } from './components/TaskCard'
+import { DaySection } from './components/DaySection'
+import { api } from './services/api'
+import type { DayNote } from './types/task'
+
+function todayStr() {
+  return new Date().toISOString().slice(0, 10)
+}
 
 export default function App() {
   const {
@@ -11,8 +18,29 @@ export default function App() {
     loadSuggestions, addFromSuggestion, dismissSuggestion,
   } = useTasks()
 
-  const pending = tasks.filter(t => !t.completed)
-  const done = tasks.filter(t => t.completed)
+  const [dayNotes, setDayNotes] = useState<Record<string, string>>({})
+
+  useEffect(() => {
+    api.getDayNotes().then(notes => {
+      const map: Record<string, string> = {}
+      notes.forEach((n: DayNote) => { map[n.noteDate] = n.content ?? '' })
+      setDayNotes(map)
+    }).catch(() => {})
+  }, [])
+
+  // Group tasks by taskDate, fallback to today
+  const today = todayStr()
+  const grouped: Record<string, typeof tasks> = {}
+
+  // Always show today
+  grouped[today] = []
+  tasks.forEach(t => {
+    const d = t.taskDate ?? today
+    if (!grouped[d]) grouped[d] = []
+    grouped[d].push(t)
+  })
+
+  const sortedDates = Object.keys(grouped).sort((a, b) => b.localeCompare(a))
 
   return (
     <div className="app">
@@ -45,43 +73,16 @@ export default function App() {
             <span>Đang tải...</span>
           </div>
         ) : (
-          <>
-            {pending.length > 0 && (
-              <section>
-                <h2 className="section-title">Đang làm ({pending.length})</h2>
-                {pending.map(t => (
-                  <TaskCard
-                    key={t.id}
-                    task={t}
-                    onComplete={() => completeTask(t)}
-                    onDelete={() => deleteTask(t.id)}
-                  />
-                ))}
-              </section>
-            )}
-
-            {done.length > 0 && (
-              <section>
-                <h2 className="section-title done-title">Hoàn thành ({done.length})</h2>
-                {done.map(t => (
-                  <TaskCard
-                    key={t.id}
-                    task={t}
-                    onComplete={() => {}}
-                    onDelete={() => deleteTask(t.id)}
-                  />
-                ))}
-              </section>
-            )}
-
-            {tasks.length === 0 && !loading && (
-              <div className="empty">
-                <div className="empty-icon">✓</div>
-                <p>Chưa có task nào</p>
-                <p className="empty-sub">Thêm task đầu tiên hoặc nhấn ✨ để AI gợi ý</p>
-              </div>
-            )}
-          </>
+          sortedDates.map(date => (
+            <DaySection
+              key={date}
+              date={date}
+              tasks={grouped[date] ?? []}
+              initialNote={dayNotes[date] ?? ''}
+              onComplete={completeTask}
+              onDelete={deleteTask}
+            />
+          ))
         )}
       </main>
     </div>

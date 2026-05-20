@@ -8,8 +8,12 @@ const CATEGORIES: { value: Category; label: string }[] = [
   { value: 'personal', label: 'Cá nhân' },
 ]
 
+function todayStr() {
+  return new Date().toISOString().slice(0, 10)
+}
+
 interface Props {
-  onAdd: (title: string, category: Category, startTime?: string | null, endTime?: string | null) => Promise<void>
+  onAdd: (title: string, category: Category, startTime?: string | null, endTime?: string | null, taskDate?: string | null) => Promise<void>
 }
 
 export function AddTaskForm({ onAdd }: Props) {
@@ -17,6 +21,7 @@ export function AddTaskForm({ onAdd }: Props) {
   const [category, setCategory] = useState<Category>('work')
   const [startTime, setStartTime] = useState('')
   const [endTime, setEndTime] = useState('')
+  const [taskDate, setTaskDate] = useState(todayStr())
   const [adding, setAdding] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -25,7 +30,7 @@ export function AddTaskForm({ onAdd }: Props) {
     if (!t) return
     setAdding(true)
     try {
-      await onAdd(t, category, startTime || null, endTime || null)
+      await onAdd(t, category, startTime || null, endTime || null, taskDate || null)
       setTitle('')
       setStartTime('')
       setEndTime('')
@@ -58,8 +63,15 @@ export function AddTaskForm({ onAdd }: Props) {
           {adding ? '...' : 'Thêm'}
         </button>
       </div>
-      <div className="add-form-time">
-        <label className="time-label">Từ</label>
+      <div className="add-form-meta">
+        <input
+          className="date-input"
+          type="date"
+          value={taskDate}
+          onChange={e => setTaskDate(e.target.value)}
+          disabled={adding}
+        />
+        <span className="time-label">Từ</span>
         <input
           className="time-input"
           type="time"
@@ -67,7 +79,7 @@ export function AddTaskForm({ onAdd }: Props) {
           onChange={e => setStartTime(e.target.value)}
           disabled={adding}
         />
-        <label className="time-label">đến</label>
+        <span className="time-label">đến</span>
         <input
           className="time-input"
           type="time"
