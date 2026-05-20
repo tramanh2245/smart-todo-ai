@@ -6,6 +6,7 @@ body {
   background: #f5f5f5;
   color: #212121;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 /* ── Layout ── */
@@ -16,6 +17,7 @@ body {
   display: flex;
   flex-direction: column;
   background: #f5f5f5;
+  overflow-x: hidden;
 }
 
 .main {
@@ -31,6 +33,7 @@ body {
   background: #009688;
   color: white;
   padding: 12px 16px 14px;
+  padding-top: calc(12px + env(safe-area-inset-top));
   position: sticky;
   top: 0;
   z-index: 10;
@@ -128,6 +131,7 @@ body {
   gap: 6px;
   padding: 0 2px;
   flex-wrap: wrap;
+  width: 100%;
 }
 
 .date-input {
@@ -138,6 +142,9 @@ body {
   outline: none;
   color: #212121;
   transition: border-color 0.15s;
+  min-width: 0;
+  flex: 1;
+  max-width: 140px;
 }
 
 .date-input:focus { border-color: #009688; }
@@ -156,6 +163,8 @@ body {
   outline: none;
   color: #212121;
   transition: border-color 0.15s;
+  min-width: 0;
+  width: 90px;
 }
 
 .time-input:focus { border-color: #009688; }
@@ -309,6 +318,7 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  max-width: 100%;
 }
 
 .task-done .task-title {
@@ -447,9 +457,13 @@ body {
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ── PWA install prompt safe area ── */
-@supports (padding-bottom: env(safe-area-inset-bottom)) {
-  .main { padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
+/* ── Safe area (iPhone notch + home bar) ── */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .main {
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+    padding-left: calc(12px + env(safe-area-inset-left));
+    padding-right: calc(12px + env(safe-area-inset-right));
+  }
 }
 
 /* ── Day Section ── */
